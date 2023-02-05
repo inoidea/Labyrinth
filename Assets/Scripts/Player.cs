@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -21,6 +23,9 @@ public class Player : MonoBehaviour
     Vector3 _moveDirection;
 
     Rigidbody _rb;
+
+    public static Action<float, float> OnHealthChanged;
+    public static Action DeleteAllEffects;
 
     public bool ShieldExists { get; set; }
 
@@ -67,6 +72,7 @@ public class Player : MonoBehaviour
     public void AddHP(float hp)
     {
         _currentHp = Mathf.Clamp(_currentHp + hp, 0, _maxHp);
+        OnHealthChanged?.Invoke(_currentHp, _maxHp);
     }
 
     public void TakeDamage(float damage) {
@@ -75,12 +81,20 @@ public class Player : MonoBehaviour
         else
         {
             _currentHp -= damage;
+            OnHealthChanged?.Invoke(_currentHp, _maxHp);
 
             if (_currentHp <= 0)
             {
-                Destroy(gameObject);
+                Death();
             }
         }
+    }
+
+    public void Death()
+    {
+        Destroy(gameObject);
+
+        DeleteAllEffects?.Invoke();
     }
 
     public void SpeedChange(float speed)
