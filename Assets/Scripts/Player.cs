@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IUnit
 {
     [SerializeField] private float _currentHp;
     public readonly float _maxHp = 100;
@@ -25,11 +26,11 @@ public class Player : MonoBehaviour
     Rigidbody _rb;
 
     public static Action<float, float> OnHealthChanged;
-    public static Action DeleteAllEffects;
+    public static Action DeleteAllActiveElements;
 
     public bool ShieldExists { get; set; }
 
-    private void Start()
+    private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
     }
@@ -38,11 +39,26 @@ public class Player : MonoBehaviour
     {
         MyInput();
         SpeedControl();
+        CursorControl();
     }
 
     private void FixedUpdate()
     {
         MovePlayer();
+    }
+
+    private void CursorControl() {
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftAlt))
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     private void MyInput()
@@ -94,7 +110,7 @@ public class Player : MonoBehaviour
     {
         Destroy(gameObject);
 
-        DeleteAllEffects?.Invoke();
+        DeleteAllActiveElements?.Invoke();
     }
 
     public void SpeedChange(float speed)

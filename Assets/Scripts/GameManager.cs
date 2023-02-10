@@ -9,6 +9,12 @@ using static UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Coins")]
+    [SerializeField] private Transform _coinPointParent;
+    [SerializeField] private List<Transform> _coinPoints;
+
+    [SerializeField] private GameObject _coinPref;
+
     [Header("Effects")]
     [SerializeField] private Transform _effectPointParent;
     [SerializeField] private List<Transform> _effectPoints;
@@ -16,26 +22,34 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _positiveEffect;
     [SerializeField] private GameObject _negativeEffect;
 
-    public List<GameObject> _effectList;
+    public List<GameObject> _activeElementList;
 
-    private void Awake()
-    {
-        Subscribe();
-    }
+    public static Action<float> OnCoinChangeMaxNum;
 
     private void Start()
     {
+        // Сформировать список точек появления эффектов.
         for (int i = 0; i < _effectPointParent.childCount; i++)
         {
             _effectPoints.Add(_effectPointParent.GetChild(i));
         }
 
+        // Сформировать список точек появления монет.
+        for (int i = 0; i < _coinPointParent.childCount; i++)
+        {
+            _coinPoints.Add(_coinPointParent.GetChild(i));
+        }
+
+        OnCoinChangeMaxNum?.Invoke(_coinPoints.Count);
+
+        Subscribe();
         ShowEffects();
+        ShowCoins();
     }
 
     private void Subscribe()
     {
-        Player.DeleteAllEffects += DeleteAllEffects;
+        Player.DeleteAllActiveElements += DeleteAllActiveElements;
     }
 
     private void ShowEffects()
@@ -46,24 +60,35 @@ public class GameManager : MonoBehaviour
                 bool posEffect = ((Range(1, 10) % 2) == 0);
 
                 GameObject effect = Instantiate((posEffect) ? _positiveEffect : _negativeEffect, p.transform.position, Quaternion.identity);
-                _effectList.Add(effect);
+                _activeElementList.Add(effect);
             });
         }
     }
 
-    public void DeleteAllEffects()
+    private void ShowCoins()
     {
-        if (_effectList.Count > 0)
+        if (_coinPoints.Count > 0)
         {
-            _effectList.ForEach(p => {
-                try
-                {
-                    Destroy(p);
-                }
-                catch {
-                    throw new Exception("Объект удален ранее.");
-                }
+            _coinPoints.ForEach(p => {
+                GameObject coin = Instantiate(_coinPref, p.transform.position, Quaternion.identity);
+                coin.transform.rotation = Quaternion.Euler(90, 0, 0);
+                //Quaternion rotation = coin.transform.rotation;
+                //rotation.x = 90;
+                _activeElementList.Add(coin);
             });
         }
+    }
+
+    private void DeleteAllActiveElements()
+    {
+        if (_activeElementList.Count > 0)
+        {
+            _activeElementList.ForEach(p => { Destroy(p); });
+        }
+    }
+
+    private void OnDestroy()
+    {
+        Player.DeleteAllActiveElements -= DeleteAllActiveElements;
     }
 }

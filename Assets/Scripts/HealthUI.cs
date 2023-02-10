@@ -9,7 +9,7 @@ public class HealthUI : MonoBehaviour
     [SerializeField] private Image _hpBar;
     [SerializeField] private Text _hpText;
 
-    private void Awake()
+    private void Start()
     {
         Subscribe();
     }
@@ -26,5 +26,10 @@ public class HealthUI : MonoBehaviour
         _hpBar.rectTransform.anchorMax = anchorMax;
 
         _hpText.text = healthPerc.ToString() + "%";
+    }
+
+    private void OnDestroy()
+    {
+        Player.OnHealthChanged -= OnHealthChanged;
     }
 }

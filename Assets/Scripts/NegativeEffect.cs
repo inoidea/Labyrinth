@@ -12,6 +12,7 @@ public enum NegativeEffectType
 public class NegativeEffect : MonoBehaviour
 {
     public NegativeEffectType _effectType;
+    protected IUnit _unit;
 
     private void Awake()
     {
@@ -20,28 +21,30 @@ public class NegativeEffect : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            Player player = other.GetComponent<Player>();
+        _unit = other.GetComponent<IUnit>();
 
-            switch (_effectType)
-            {
-                case NegativeEffectType.Slowdown: player.SpeedChange(Range(-2, -5)); break;
-                case NegativeEffectType.Damage: player.TakeDamage(Range(10, 50)); break;
-                case NegativeEffectType.Respawn: player.Respawn(); break;
-                case NegativeEffectType.Mix: Log("Будет перемешивание эффектов"); break;
-                default: break;
-            }
+        if (_unit == null)
+            return;
+
+        switch (_effectType)
+        {
+            case NegativeEffectType.Slowdown: _unit.SpeedChange(Range(-2, -5)); break;
+            case NegativeEffectType.Damage: _unit.TakeDamage(Range(10, 50)); break;
+            case NegativeEffectType.Respawn: _unit.Respawn(); break;
+            case NegativeEffectType.Mix: Log("Будет перемешивание эффектов"); break;
+            default: break;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            Destroy(gameObject);
-            Log("Удален эффект " + _effectType);
-        }
+        _unit = other.GetComponent<IUnit>();
+
+        if (_unit == null)
+            return;
+
+        Destroy(gameObject);
+        Log("Удален эффект " + _effectType);
     }
 
     private void GetEffect()

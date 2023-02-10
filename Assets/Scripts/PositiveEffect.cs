@@ -14,6 +14,7 @@ public enum PositiveEffectType
 public class PositiveEffect : MonoBehaviour
 {
     public PositiveEffectType _effectType;
+    protected IUnit _unit;
 
     private void Awake()
     {
@@ -22,27 +23,29 @@ public class PositiveEffect : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            Player player = other.GetComponent<Player>();
+        _unit = other.GetComponent<IUnit>();
 
-            switch (_effectType)
-            {
-                case PositiveEffectType.Boost: player.SpeedChange(Range(2, 10)); break;
-                case PositiveEffectType.Medicine: player.AddHP(Range(10, 70)); break;
-                case PositiveEffectType.Shield: player.ShieldExists = true; break;
-                default: break;
-            }
+        if (_unit == null)
+            return;
+
+        switch (_effectType)
+        {
+            case PositiveEffectType.Boost: _unit.SpeedChange(Range(2, 10)); break;
+            case PositiveEffectType.Medicine: _unit.AddHP(Range(10, 70)); break;
+            case PositiveEffectType.Shield: _unit.ShieldExists = true; break;
+            default: break;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            Destroy(gameObject);
-            Log("Удален эффект " + _effectType);
-        }
+        _unit = other.GetComponent<IUnit>();
+
+        if (_unit == null)
+            return;
+
+        Destroy(gameObject);
+        Log("Удален эффект " + _effectType);
     }
 
     private void GetEffect() {
