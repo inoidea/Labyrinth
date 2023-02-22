@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using static UnityEngine.Debug;
 using static UnityEngine.Random;
@@ -25,6 +26,11 @@ public class GameManager : MonoBehaviour
     public List<GameObject> _activeElementList;
 
     public static Action<float> OnCoinChangeMaxNum;
+
+    private JsonData<SaveData> _jsonData = new JsonData<SaveData>();
+    private SaveData _saveData = new SaveData();
+
+    private string path = Path.Combine(Application.streamingAssetsPath, "JsonData.xml");
 
     private void Start()
     {
@@ -56,12 +62,19 @@ public class GameManager : MonoBehaviour
     {
         if (_effectPoints.Count > 0)
         {
+            List<SaveData> jsonDataList = new List<SaveData>();
+
             _effectPoints.ForEach(p => {
                 bool posEffect = ((Range(1, 10) % 2) == 0);
 
                 GameObject effect = Instantiate((posEffect) ? _positiveEffect : _negativeEffect, p.transform.position, Quaternion.identity);
                 _activeElementList.Add(effect);
+
+                jsonDataList.Add(new SaveData() { Name = effect.name, Position = effect.transform.position });
             });
+
+            // Сохранить данные эффектов.
+            _jsonData.SaveFromList(jsonDataList, path);
         }
     }
 
@@ -72,8 +85,6 @@ public class GameManager : MonoBehaviour
             _coinPoints.ForEach(p => {
                 GameObject coin = Instantiate(_coinPref, p.transform.position, Quaternion.identity);
                 coin.transform.rotation = Quaternion.Euler(90, 0, 0);
-                //Quaternion rotation = coin.transform.rotation;
-                //rotation.x = 90;
                 _activeElementList.Add(coin);
             });
         }
