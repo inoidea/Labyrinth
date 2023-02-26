@@ -7,6 +7,8 @@ using System.Xml;
 
 public class Test : MonoBehaviour
 {
+    [SerializeField] private float ActiveDis;
+
     void Start()
     {
         var path = Path.Combine(Application.streamingAssetsPath, "save.txt");
@@ -53,5 +55,24 @@ public class Test : MonoBehaviour
         rootNode.AppendChild(userNode);
 
         xmlDoc.Save(path);
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Отображение иконки на объекте. По умолчанию иконка хранится в папке "Gizmos".
+        //Gizmos.DrawIcon(transform.position, "image.jpg", true);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        #if UNITY_EDITOR
+        // Отображение радиуса выделяемого объекта.
+        Gizmos.DrawWireSphere(Vector3.zero, 5);
+
+        // Отображение радиусов в 3х измерениях (как коллайдер).
+        Transform t = transform;
+        var flat = new Vector3(ActiveDis, 0, ActiveDis);
+        Gizmos.matrix = Matrix4x4.TRS(t.position, t.rotation, flat);
+        #endif
     }
 }
