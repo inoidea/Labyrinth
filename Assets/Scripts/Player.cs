@@ -85,6 +85,11 @@ public class Player : MonoBehaviour, IUnit
         }
     }
 
+    public (float currentHP, float maxHP) GetHP()
+    {
+        return (_currentHp, _maxHp);
+    }
+
     public void AddHP(float hp)
     {
         _currentHp = Mathf.Clamp(_currentHp + hp, 0, _maxHp);

@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour
     public static Action<float> OnCoinChangeMaxNum;
 
     private JsonData<SaveData> _jsonData = new JsonData<SaveData>();
-    private SaveData _saveData = new SaveData();
 
     private string path = Path.Combine(Application.streamingAssetsPath, "JsonData.xml");
 

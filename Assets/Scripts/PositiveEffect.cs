@@ -45,7 +45,8 @@ public class PositiveEffect : MonoBehaviour
             return;
 
         Destroy(gameObject);
-        Log("Удален эффект " + _effectType);
+
+        Log("Получен положительный эффект " + GetEffectInfo());
     }
 
     private void GetEffect() {
@@ -58,5 +59,10 @@ public class PositiveEffect : MonoBehaviour
             case 2: _effectType = PositiveEffectType.Shield; break;
             default: break;
         }
+    }
+
+    public (PositiveEffectType type, Vector3 pos) GetEffectInfo()
+    {
+        return (_effectType, transform.position);
     }
 }

@@ -57,25 +57,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\PlayerCamera.cs" />
+    <Compile Include="Assets\Scripts\MyWindow.cs" />
     <Compile Include="Assets\Scripts\MiniMap.cs" />
     <Compile Include="Assets\Scripts\Lesson7.cs" />
     <Compile Include="Assets\Scripts\IUnit.cs" />
     <Compile Include="Assets\Scripts\HealthUI.cs" />
     <Compile Include="Assets\Scripts\NegativeEffect.cs" />
     <Compile Include="Assets\Scripts\JsonData.cs" />
+    <Compile Include="Assets\Scripts\MenuItems.cs" />
     <Compile Include="Assets\Scripts\ReloadUI.cs" />
     <Compile Include="Assets\Scripts\Coin.cs" />
     <Compile Include="Assets\Scripts\Test.cs" />
     <Compile Include="Assets\Scripts\CoinUI.cs" />
+    <Compile Include="Assets\Scripts\TestBehaviourEditor.cs" />
     <Compile Include="Assets\Scripts\IData.cs" />
+    <Compile Include="Assets\Scripts\TestBehaviour.cs" />
     <Compile Include="Assets\Scripts\MoveCamera.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PositiveEffect.cs" />
-    <Compile Include="Assets\Scripts\MenuItems.cs" />
-    <Compile Include="Assets\Scripts\MyWindow.cs" />
-    <Compile Include="Assets\Scripts\TestBehaviour.cs" />
-    <Compile Include="Assets\Scripts\TestBehaviourEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

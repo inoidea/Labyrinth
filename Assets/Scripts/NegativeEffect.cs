@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Random;
 using static UnityEngine.Debug;
+using UnityEngine.UIElements;
 
 public enum NegativeEffectType
 {
-    Slowdown, Damage, Respawn, Mix
+    Slowdown, Damage, Respawn
 }
 
 public class NegativeEffect : MonoBehaviour
@@ -31,7 +32,6 @@ public class NegativeEffect : MonoBehaviour
             case NegativeEffectType.Slowdown: _unit.SpeedChange(Range(-2, -5)); break;
             case NegativeEffectType.Damage: _unit.TakeDamage(Range(10, 50)); break;
             case NegativeEffectType.Respawn: _unit.Respawn(); break;
-            case NegativeEffectType.Mix: Log("Будет перемешивание эффектов"); break;
             default: break;
         }
     }
@@ -44,20 +44,25 @@ public class NegativeEffect : MonoBehaviour
             return;
 
         Destroy(gameObject);
-        Log("Удален эффект " + _effectType);
+
+        Log("Получен отрицательный эффект " + GetEffectInfo());
     }
 
     private void GetEffect()
     {
-        int effectTypeNumber = Range(0, 3);
+        int effectTypeNumber = Range(0, 2);
 
         switch (effectTypeNumber)
         {
             case 0: _effectType = NegativeEffectType.Slowdown; break;
             case 1: _effectType = NegativeEffectType.Damage; break;
             case 2: _effectType = NegativeEffectType.Respawn; break;
-            case 3: _effectType = NegativeEffectType.Mix; break;
             default: break;
         }
+    }
+
+    public (NegativeEffectType type, Vector3 pos) GetEffectInfo()
+    {
+        return (_effectType, transform.position);
     }
 }
